@@ -31,3 +31,39 @@ spec:
           value: "$(params.repo-url)"
         - name: branch
           value: "$(params.branch)"
+
+    - name: lint
+      taskRef:
+        name: echo
+      params:
+      - name: message
+        value: "Llamando al linter Flake8..."
+      runAfter:
+        - clone
+
+    - name: tests
+      taskRef:
+        name: echo
+      params:
+      - name: message
+        value: "Ejecutando pruebas unitarias con PyUnit..."
+      runAfter:
+        - lint
+    
+    - name: build
+      taskRef:
+        name: echo
+      params:
+      - name: message
+        value: "Construyendo imagen para $(params.repo-url)..."
+      runAfter:
+        - tests
+    
+    - name: deploy
+      taskRef:
+        name: echo
+      params:
+      - name: message
+        value: "Desplegando la rama $(params.branch) de $(params.repo-url)..."
+      runAfter:
+        - build
